@@ -35,6 +35,17 @@ class Aula{
     }
 }
 
+
+public static Aluno encontrarAluno(ArrayList<Aluno> alunos, String nomeProcurado){
+    for (Aluno aluno : alunos){
+        if (aluno.nome.equals(nomeProcurado)){
+            return aluno;
+        }
+    }
+    return null;
+            
+}
+
 public class academia {
 
     public static void main(String[] args) {
@@ -53,7 +64,7 @@ public class academia {
                 String nome = scan.nextLine();
                 System.out.println("Insira a sua data de nascimento, no estilo (dd/mm/aaaa): ");
                 String dataNascimento = scan.nextLine();
-                Aluno aluno = new Aluno(nome, dataNascimento, dataNascimento);
+                Aluno aluno = new Aluno(nome, dataNascimento, "ATIVO");
                 System.out.println("Aluno cadastrado!!");
                 alunos.add(aluno);
                     break;
@@ -79,6 +90,15 @@ public class academia {
                     break;
                 case 4:
                 System.out.println("Selecione o aluno que terá o status alterado: ");
+                String nomeProcurado = scan.nextLine();
+                Aluno alunoProcurado = encontrarAluno(alunos, nomeProcurado);
+                if (alunoProcurado != null) {
+                    System.out.println("Aluno " + alunoProcurado.nome + " encontrado!");                    
+                    System.out.println("Data de nascimento: " + alunoProcurado.dataNascimento);                    
+                    System.out.println("Mude o status do aluno " + alunoProcurado.nome);
+                    String novoStatus = scan.nextLine();
+                    aluno.status = novoStatus;                    
+                }
 
                     break;
                 case 5:

@@ -102,7 +102,7 @@ public class academia {
 
                     break;
                 case 5:
-                System.out.println("Página principal encerrada!");
+                System.out.println("Encerrando...");
                     break menu;
                 default:
                 System.out.println("O código inserido é inválido!!");

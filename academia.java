@@ -1,113 +1,180 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 
-class Aluno{
+class Aluno {
     String nome;
     String dataNascimento;
     String status;
 
-    public Aluno(String nome, String dataNascimento, String status){
+    public Aluno(String nome, String dataNascimento) {
         this.nome = nome;
         this.dataNascimento = dataNascimento;
-        this.status = status;
+        this.status = "ativo"; // Status padrão definido como "ativo" no cadastro
+    }
+
+    // Método para verificar se o aluno está ativo
+    public boolean isAtivo() {
+        return this.status.equalsIgnoreCase("ativo");
     }
 }
 
-class Instrutor{
+class Instrutor {
     String nomeIns;
     String especialidade;
 
-    public Instrutor(String nomeIns, String especialidade){
+    public Instrutor(String nomeIns, String especialidade) {
         this.nomeIns = nomeIns;
         this.especialidade = especialidade;
     }
 }
 
-class Aula{
+class Aula {
     String descricao;
     String alunosPresentes;
     String instrutorPresente;
-    
-    public Aula(String descricao, String alunosPresentes, String instrutorPresente){
+
+    public Aula(String descricao, String alunosPresentes, String instrutorPresente) {
         this.descricao = descricao;
         this.alunosPresentes = alunosPresentes;
-        this.instrutorPresente = instrutorPresente;
+        this.instrutorPresente = instrutorPresente; 
     }
 }
 
-public class academia {
-    public static Aluno encontrarAluno(ArrayList<Aluno> alunos, String nomeProcurado){
-        for (Aluno aluno : alunos){
-            if (aluno.nome.equals(nomeProcurado)){
-                return aluno;
-            }
+class MarcadorAula {
+    public void verificarAlunoAtivo(Aluno aluno) {
+        if (aluno.isAtivo()) {
+            System.out.println("O aluno " + aluno.nome + " está ativo e pode participar da aula.");
+        } else {
+            throw new IllegalArgumentException("O aluno " + aluno.nome + " está inativo e não pode participar da aula.");
         }
-        return null;
     }
+}
+
+public class acad {
 
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
+        Scanner in = new Scanner(System.in);
         ArrayList<Aluno> alunos = new ArrayList<>();
         ArrayList<Instrutor> instrutores = new ArrayList<>();
         ArrayList<Aula> aulas = new ArrayList<>();
+        MarcadorAula marcadorAula = new MarcadorAula();
 
         menu:
         while (true) {
-            System.out.println("1. Cadastrar Aluno \n2. Cadastrar Instrutor \n3. Cadastrar Aula \n4. Alterar Status do Aluno \n5. Sair");
-            int opcao = scan.nextInt(); scan.nextLine();
-            switch (opcao) {
-                case 1:
-                    System.out.println("Preencha o campo com o seu nome completo: ");
-                    String nome = scan.nextLine();
-                    System.out.println("Insira a sua data de nascimento, no estilo (dd/mm/aaaa): ");
-                    String dataNascimento = scan.nextLine();
-                    Aluno aluno = new Aluno(nome, dataNascimento, "ATIVO");
-                    System.out.println("Aluno cadastrado!!");
-                    alunos.add(aluno);
-                    break;
-                case 2:
-                    System.out.println("Preencha o campo com o seu nome completo: ");
-                    String nomeIns = scan.nextLine();
-                    System.out.println("Insira a sua especialidade no campo: ");
-                    String especialidade = scan.nextLine();
-                    Instrutor instrutor = new Instrutor(nomeIns, especialidade);
-                    System.out.println("Instrutor cadastrado!!!");
-                    instrutores.add(instrutor);
-                    break;
-                case 3:
-                    System.out.println("Preencha o campo com um breve resumo sobre a aula: ");
-                    String aula = scan.nextLine();
-                    System.out.println("Alunos presentes: ");
-                    String alunosPresentes = scan.nextLine();
-                    System.out.println("Instrutor(es) responsável(eis): ");
-                    String instrutorPresente = scan.nextLine();
-                    Aula aulass = new Aula(aula, alunosPresentes, instrutorPresente);
-                    System.out.println("Aula salva com sucesso!!");
-                    aulas.add(aulass);
-                    break;
-                case 4:
-                    System.out.println("Selecione o aluno que terá o status alterado: ");
-                    String nomeProcurado = scan.nextLine();
-                    Aluno alunoProcurado = encontrarAluno(alunos, nomeProcurado);
-                    if (alunoProcurado != null) {
-                        System.out.println("Aluno " + alunoProcurado.nome + " encontrado!");                    
-                        System.out.println("Data de nascimento: " + alunoProcurado.dataNascimento);                    
-                        System.out.println("Mude o status do aluno " + alunoProcurado.nome);
-                        String novoStatus = scan.nextLine();
-                        alunoProcurado.status = novoStatus;
-                    } else {
-                        System.out.println("Aluno não encontrado.");
-                    }
-                    break;
-                case 5:
-                    System.out.println("Encerrando...");
-                    break menu;
-                default:
-                    System.out.println("O código inserido é inválido!!");
-                    break;
+            try {
+                System.out.println("1. Cadastrar Aluno \n2. Cadastrar Instrutor \n3. Cadastrar Aula \n4. Alterar Status de Aluno \n5. Marcar Aula para um Aluno \n6. Sair");
+                int opcao = Integer.parseInt(in.nextLine().trim());
+
+                switch (opcao) {
+                    case 1:
+                        System.out.println("Preencha o campo com o seu nome completo: ");
+                        String nome = in.nextLine();
+                        System.out.println("Insira sua data de nascimento, com o formato (dd/mm/aaaa)");
+                        String dataNascimento = in.nextLine();
+                        Aluno aluno = new Aluno(nome, dataNascimento);
+                        System.out.println("Aluno cadastrado com status ativo!");
+                        alunos.add(aluno);
+                        break;
+                    case 2:
+                        System.out.println("Preencha o campo com o seu nome completo: ");
+                        String nomeIns = in.nextLine();
+                        System.out.println("Conte-nos a sua especialidade");
+                        String especialidade = in.nextLine();
+                        Instrutor instrutor = new Instrutor(nomeIns, especialidade);
+                        System.out.println("Instrutor cadastrado!!");
+                        instrutores.add(instrutor);
+                        break;
+                    case 3:
+                        if (alunos.isEmpty()) {
+                            System.out.println("Erro: Nenhum aluno cadastrado.");
+                            break;
+                        }
+                        if (instrutores.isEmpty()) {
+                            System.out.println("Erro: Nenhum instrutor cadastrado.");
+                            break;
+                        }
+                        System.out.println("Preencha o campo com a descrição sobre a aula");
+                        String descricao = in.nextLine();
+                        System.out.println("Alunos presentes:");
+                        contarAlunosAtivos(alunos);
+                        System.out.println("Instrutores disponíveis:");
+                        contarInstrutores(instrutores);
+                        Aula aula = new Aula(descricao, "Alunos ativos", "Instrutor presente");
+                        System.out.println("Aula cadastrada!!");
+                        aulas.add(aula);
+                        break;
+                    case 4:
+                        if (alunos.isEmpty()) {
+                            System.out.println("Erro: Nenhum aluno cadastrado.");
+                            break;
+                        }
+                        System.out.println("Selecione o aluno para alterar seu status");
+                        for (int i = 0; i < alunos.size(); i++) {
+                            System.out.println(i + ". " + alunos.get(i).nome + " - Status: " + alunos.get(i).status);
+                        }
+                        int alunoIndex = Integer.parseInt(in.nextLine().trim());
+                        if (alunoIndex < 0 || alunoIndex >= alunos.size()) {
+                            System.out.println("Erro: Índice inválido para o aluno.");
+                            break;
+                        }
+                        System.out.println("Novo status (ativo/inativo): ");
+                        String novoStatus = in.nextLine();
+                        alunos.get(alunoIndex).status = novoStatus;
+                        System.out.println("Status atualizado!");
+                        break;
+                    case 5:
+                        if (alunos.isEmpty()) {
+                            System.out.println("Erro: Nenhum aluno cadastrado.");
+                            break;
+                        }
+                        System.out.println("Selecione o aluno para marcar a aula:");
+                        for (int i = 0; i < alunos.size(); i++) {
+                            System.out.println(i + ". " + alunos.get(i).nome + " - Status: " + alunos.get(i).status);
+                        }
+                        int alunoEscolhido = Integer.parseInt(in.nextLine().trim());
+                        if (alunoEscolhido < 0 || alunoEscolhido >= alunos.size()) {
+                            System.out.println("Erro: Índice inválido para o aluno.");
+                            break;
+                        }
+                        try {
+                            marcadorAula.verificarAlunoAtivo(alunos.get(alunoEscolhido));
+                        } catch (IllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        }
+                        break;
+                    case 6:
+                        System.out.println("Encerrando o programa...");
+                        break menu;
+                    default:
+                        System.out.println("Opção inválida!!!");
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: Entrada inválida. Por favor, insira um número.");
+            } catch (Exception e) {
+                System.out.println("Erro inesperado: " + e.getMessage());
             }
         }
+        in.close();
+    }
 
-        scan.close();
-    }
+    public static void contarAlunosAtivos(ArrayList<Aluno> alunos) {
+        int contador = 0;
+        for (Aluno aluno : alunos) {
+            if (aluno.isAtivo()) {
+                contador++;
+                System.out.println("Aluno: " + aluno.nome + " - Status: Ativo");
+            }
+        }
+        System.out.println("Total de alunos ativos: " + contador);
+    }
+
+    public static void contarInstrutores(ArrayList<Instrutor> instrutores) {
+        int contador = 0;
+        for (Instrutor instrutor : instrutores) {
+            contador++;
+            System.out.println("Instrutor: " + instrutor.nomeIns + " - Especialidade: " + instrutor.especialidade);
+        }
+        System.out.println("Total de instrutores: " + contador);
+    }
 }
